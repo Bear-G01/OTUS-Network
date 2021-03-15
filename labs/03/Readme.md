@@ -174,3 +174,8 @@ Interface           Role Sts Cost      Prio.Nbr Type
 Fa0/2               Root FWD 19        128.2    P2p 
 Fa0/4               Desg FWD 19        128.4    P2p 
 ```
+
+Роль и состояние активных портов в топологии:
+
+![Topology-STP](lab03-part2.svg)
+
