@@ -262,9 +262,80 @@ Interface           Role Sts Cost      Prio.Nbr Type
 Fa0/2               Root FWD 19        128.2    P2p 
 Fa0/4               Altn BLK 19        128.4    P2p 
 ```
+**Почему протокол spanning-tree заменяет ранее заблокированный порт на назначенный порт и блокирует порт, который был назначенным портом на другом коммутаторе?**<br>
+Назначенный порт выбирается по:
+* Меньшему Root Path Cost.
+* Меньшему Bridge ID.
+* Меньшему Port ID. 
 
+Так как Fa 0/4 на S1 теперь имеет меньшую стоимость пути к корневому мосту, то порт S1 Fa 0/4 стал назначенным, а S3 Fa 0/4 заблокирован.
 
+Удаление изменения стоимости порта:
+```
+interface 0/2
+no spanning-tree cost 18
+```
+### Часть 4. Наблюдение за процессом выбора протокола STP порта, исходя из приоритета портов.
 
+Включение портов Fa 0/1, Fa 0/3 на всех коммутаторах:
+```
+interface range FastEthernet 0/1, FastEthernet 0/3
+no shutdown
+```
+Информация spanning-tree на коммутаторах S1 и S2:
+```
+S1#show spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     1c1d.8686.1d80
+             Cost        19
+             Port        3 (FastEthernet0/3)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     ecc8.82dd.4980
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  15  sec
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Fa0/1               Root FWD 19        128.1    P2p
+Fa0/2               Altn BLK 19        128.2    P2p 
+Fa0/3               Altn BLK 19        128.3    P2p 
+Fa0/4               Altn BLK 19        128.4    P2p 
+```
+```
+S3#show spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     1c1d.8686.1d80
+             Cost        19
+             Port        1 (FastEthernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     c025.5c31.8c80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Fa0/1               Root FWD 19        128.1    P2p 
+Fa0/2               Altn BLK 19        128.2    P2p 
+Fa0/3               Desg FWD 19        128.3    P2p 
+Fa0/4               Desg FWD 19        128.4    P2p 
+```
 
+**Какой порт выбран протоколом STP в качестве порта корневого моста на каждом коммутаторе некорневого моста?**<br>
+F0/1
 
+**Почему протокол STP выбрал эти порты в качестве портов корневого моста на этих коммутаторах?**<br>
+По наименьшей стоимости до корневого моста.
 
+### Вопросы для повторения
+**Какое значение протокол STP использует первым после выбора корневого моста, чтобы определить выбор порта?**<br>
+Меньший Root Path Cost.<br>
+
+**Если первое значение на двух портах одинаково, какое следующее значение будет использовать протокол STP при выборе порта?**<br>
+Меньший Bridge ID.<br>
+
+**Если оба значения на двух портах равны, каким будет следующее значение, которое использует протокол STP при выборе порта?**<br>
+Меньший Port ID.
