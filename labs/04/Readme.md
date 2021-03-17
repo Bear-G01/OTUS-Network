@@ -2,4 +2,4 @@
 
 ### Топология
 
-[Topology](lab04.svg)
+![Topology](lab04.svg)
