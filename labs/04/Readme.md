@@ -10,7 +10,7 @@
 | R1         | G0/0/0      | 10.0.0.1     | 255.255.255.252 | N/A                  |
 |            | G0/0/1      | N/A          | N/A             |                      |
 |            | G0/0/1.100  | 192.168.1.1  | 255.255.255.192 |                      |
-|            | G0/0/1.200  | 192.168.1.64 | 255.255.255.224 |                      |
+|            | G0/0/1.200  | 192.168.1.65 | 255.255.255.224 |                      |
 |            | G0/0/1.1000 | N/A          | N/A             |                      |
 | R2         | G0/0/0      | 10.0.0.2     | 255.255.255.252 | N/A                  |
 |            | G0/0/1      | 192.168.1.97 | 255.255.255.240 |                      |
@@ -35,4 +35,82 @@
 * Часть 2. Настроить и проверить 2 DHCPv4-сервера на R1.
 * Часть 3. Настроить и проверить DHCP Relay на R2.
 
+
+#### Конфигурация базовых настроек на маршрутизаторах R1/R2.
+
+Подключение к маршрутизатору и вход в привилегированный режим:<br>
+`enable`
+
+Вход в режим конфигурации:<br>
+`configure terminal`
+
+Указание имени маршрутизатора:<br>
+`hostname R1` - на R1<br>
+`hostname R2` - на R2
+
+Отключение разрешения имен DNS:<br>
+`no ip domain-lookup`
+
+Установка паролей на вход в привилегированный режим, консольному и терминальному подключенииям. Включение шифрования паролей в виде простого текста:
+
+```
+enable secret class
+line console 0
+password cisco
+login
+exit
+line vty 0 4
+password cisco
+login
+exit
+service password-encryption
+```
+
+Установка баннера при подключении
+
+```
+banner motd C
+===============================================================================
+        Connections are logged. Unauthorized access is prohibited.           
+===============================================================================
+C
+```
+
+Копирование текущей конфигурации в файл стартовой конфигурации<br>
+`copy running-config startup-config`
+
+Установка времени на маршрутизаторе
+```
+configure terminal
+clock set HH:MM:SS MONTH DD YEAR
+```
+
+#### Конфигурирование меж-VLAN маршрутизации на R1
+ 
+Включение интерфейса G0/0/1
+```
+int G0/0/1
+no shutdown
+```
+
+Конфигурирование подинтерфейсов для каждого VLAN согласно таблице
+```
+interface G0/0/1.100
+description Default Gateway for VLAN 100
+encapsulation dot1Q 100
+ip address 192.168.1.1 255.255.255.192
+exit
+interface G0/0/1.200
+description Default Gateway for VLAN 200
+encapsulation dot1Q 200
+ip address 192.168.1.65 255.255.255.192
+exit
+interface G0/0/1.1000
+description Native VLAN
+encapsulation dot1Q 1000
+end
+```
+
+Проверка работы подинтерфейсов<br>
+`show ip interface brief`
 
