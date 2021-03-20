@@ -103,7 +103,7 @@ exit
 interface G0/0/1.200
 description Default Gateway for VLAN 200
 encapsulation dot1Q 200
-ip address 192.168.1.65 255.255.255.192
+ip address 192.168.1.65 255.255.255.224
 exit
 interface G0/0/1.1000
 description Native VLAN
@@ -114,3 +114,25 @@ end
 Проверка работы подинтерфейсов<br>
 `show ip interface brief`
 
+#### Настройка интерфейсов G0/0/1, G0/0/0 на R2 и статических маршрутов на R1/R2
+
+Настройка IP-адреса на R2 G0/0/1
+
+```
+interface G0/0/1.100
+ip address 192.168.1.97 255.255.255.240
+```
+Настройка IP-адреса на интерфейсах G0/0/0 маршрутизаторов R1/R2
+
+R1:
+```
+interface G0/0/0
+ip address 10.0.0.1 255.255.255.252
+```
+R2:
+```
+interface G0/0/0
+ip address 10.0.0.2 255.255.255.252
+```
+ Настройка маршрута по умолчанию на маршрутизаторах R1/R2
+ 
