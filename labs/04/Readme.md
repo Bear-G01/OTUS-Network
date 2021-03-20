@@ -15,7 +15,7 @@
 | R2         | G0/0/0      | 10.0.0.2     | 255.255.255.252 | N/A                  |
 |            | G0/0/1      | 192.168.1.97 | 255.255.255.240 |                      |
 | S1         | VLAN200     | 192.168.1.2  | 255.255.255.192 | 192.168.1.1          |
-| S2         | VLAN1       | 192.168.1.65 | 255.255.255.224 | 192.168.1.64         |
+| S2         | VLAN1       | 192.168.1.66 | 255.255.255.224 | 192.168.1.65         |
 | PC-A       | NIC         | DHCP         | DHCP            | DHCP                 |
 | PC-B       | NIC         | DHCP         | DHCP            | DHCP                 |
 
@@ -155,4 +155,120 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
 Копирование текущей конфигурации в файл стартовой конфигурации<br>
 `copy running-config startup-config`
 
+#### Конфигурация базовых настроек на коммутаторах S1 S2.
 
+Подключение к коммутатору и вход в привилегированный режим:<br>
+`enable`
+
+Вход в режим конфигурации:<br>
+`configure terminal`
+
+Указание имени коммутатора:<br>
+`hostname S1` - на S1 <br>
+`hostname S2` - на S2
+
+Отключение разрешения имен DNS:<br>
+`no ip domain-lookup`
+
+Установка паролей на вход в привилегированный режим, консольному и терминальному подключенииям. Включение шифрования паролей в виде простого текста:
+
+```
+enable secret class
+line console 0
+password cisco
+login
+end
+line vty 0 15
+password cisco
+login
+exit
+service password-encryption
+```
+
+Установка баннера при подключении
+
+```
+banner motd C
+===============================================================================
+        Connections are logged. Unauthorized access is prohibited.           
+===============================================================================
+C
+```
+
+Копирование текущей конфигурации в файл стартовой конфигурации<br>
+`copy running-config startup-config`
+
+Установка времени на коммутаторе<br>
+`clock set HH:MM:SS MONTH DD YEAR`
+
+#### Создание VLAN на S1
+
+Создание VLAN и назначение имени на S1
+
+```
+configure terminal
+vlan 100
+name Clients
+vlan 200
+name Management
+vlan 999
+name ParkingLot
+```
+Назначение IP-адреса на VLAN 200. Настройка шлюза по умолчанию на S1:
+```
+interface vlan 200
+ip address 192.168.1.2 255.255.255.192
+ip default-gateway 192.168.1.1
+```
+
+Назначение IP-адреса на S2 VLAN 1. Настройка шлюза по умолчанию на S2:
+```
+interface vlan 1
+ip address 192.168.1.66 255.255.255.224
+ip default-gateway 192.168.1.65
+```
+
+Назначение всех неиспользуемых портов на VLAN 999 ParkingLot на S1
+```
+interface range FastEthernet 0/2-4, FastEthernet 0/7-24, GigabitEthernet 0/1-2
+switchport mode access
+switchport access vlan 999
+shutdown
+```
+Отключение всех неиспользуемых портов на S2
+
+```
+interface range FastEthernet 0/2-4, FastEthernet 0/6-17, FastEthernet 0/19-24, GigabitEthernet 0/1-2
+shutdown
+```
+#### Назначение VLAN интерфейсам коммутаторов
+
+S1
+
+```
+interface FastEthernet 0/6
+switchport mode access
+switchport access vlan 100
+```
+
+S2
+```
+interface FastEthernet 0/18
+switchport mode access
+switchport access vlan 1
+```
+#### Настройка вручную интерфейса S1 F0/5 как 802.1Q trunk.
+
+Изменение режима работы порта
+```
+interface FastEthernet 0/5
+switchport mode trunk
+```
+Изменение native VLAN на 1000
+`switchport trunk native vlan 1000`
+
+Разрешение прохождения VLAN 100, 200, 1000 через trunk
+`switchport trunk allowed vlan 100, 200, 1000`
+
+Копирование текущей конфигурации в файл стартовой конфигурации<br>
+`copy running-config startup-config`
