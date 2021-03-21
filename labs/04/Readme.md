@@ -36,7 +36,7 @@
 * Часть 3. Настроить и проверить DHCP Relay на R2.
 
 
-#### Конфигурация базовых настроек на маршрутизаторах R1/R2.
+### Часть 1. Конфигурация базовых настроек на маршрутизаторах R1/R2.
 
 Подключение к маршрутизатору и вход в привилегированный режим:<br>
 `enable`
@@ -209,15 +209,19 @@ C
 configure terminal
 vlan 100
 name Clients
+exit
 vlan 200
 name Management
+exit
 vlan 999
 name ParkingLot
+exit
 ```
 Назначение IP-адреса на VLAN 200. Настройка шлюза по умолчанию на S1:
 ```
 interface vlan 200
 ip address 192.168.1.2 255.255.255.192
+exit
 ip default-gateway 192.168.1.1
 ```
 
@@ -225,6 +229,7 @@ ip default-gateway 192.168.1.1
 ```
 interface vlan 1
 ip address 192.168.1.66 255.255.255.224
+exit
 ip default-gateway 192.168.1.65
 ```
 
@@ -264,11 +269,143 @@ switchport access vlan 1
 interface FastEthernet 0/5
 switchport mode trunk
 ```
-Изменение native VLAN на 1000
+Изменение native VLAN на 1000<br>
 `switchport trunk native vlan 1000`
 
-Разрешение прохождения VLAN 100, 200, 1000 через trunk
+Разрешение прохождения VLAN 100, 200, 1000 через trunk<br>
 `switchport trunk allowed vlan 100, 200, 1000`
 
 Копирование текущей конфигурации в файл стартовой конфигурации<br>
 `copy running-config startup-config`
+
+Возможные адреса DHCP, если бы он был включен
+
+со стороны PC-A: 192.168.1.3-192.168.1.62
+со стороны PC-B: 192.168.1.98-192.168.1.110
+
+### Часть 2. Настройка проверка двух DHCPv4-серверов на маршрутизаторе R1
+
+#### Конфигурирование двух DHCP-пулов для двух поддерживаемых подсетей.
+
+Исключение первых пяти используемых адресов каждого DHCP-пула
+```
+ip dhcp excluded-address 192.168.1.1 192.168.1.5
+ip dhcp excluded-address 192.168.1.97 192.168.1.102
+```
+Создание DHCP-пула. Определение обслуживаемой пулом сети. Установка имени домена и шлюза по умолчанию.
+
+```
+ip dhcp pool POOL-Clients
+network 192.168.1.0 255.255.255.192
+default-router 192.168.1.1
+domain-name ccna-lab.com
+```
+```
+ip dhcp pool R2_Client_LAN
+network 192.168.1.96 255.255.255.240
+default-router 192.168.1.97
+domain-name ccna-lab.com
+```
+Конфигурирование времени аренды адреса недоступно в Packet Tracer.
+
+Копирование текущей конфигурации в файл стартовой конфигурации<br>
+`copy running-config startup-config`
+
+Проверка настройки DHCP-сервера:
+
+```
+Pool POOL-Clients :
+ Utilization mark (high/low)    : 100 / 0
+ Subnet size (first/next)       : 0 / 0 
+ Total addresses                : 62
+ Leased addresses               : 1
+ Excluded addresses             : 9
+ Pending event                  : none
+
+ 1 subnet is currently in the pool
+ Current index        IP address range                    Leased/Excluded/Total
+ 192.168.1.1          192.168.1.1      - 192.168.1.62      1    / 9     / 62
+
+Pool R2_Client_LAN :
+ Utilization mark (high/low)    : 100 / 0
+ Subnet size (first/next)       : 0 / 0 
+ Total addresses                : 14
+ Leased addresses               : 0
+ Excluded addresses             : 9
+ Pending event                  : none
+
+ 1 subnet is currently in the pool
+ Current index        IP address range                    Leased/Excluded/Total
+ 192.168.1.97         192.168.1.97     - 192.168.1.110     0    / 9     / 14
+```
+```
+R1#show ip dhcp binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+```
+
+#### Попытка получения IP-адреса от DHCP на PC-A
+
+```
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: ccna-lab.com
+   Link-local IPv6 Address.........: FE80::2E0:A3FF:FE82:D9D8
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.6
+   Subnet Mask.....................: 255.255.255.192
+   Default Gateway.................: ::
+                                     192.168.1.1
+```
+```
+Pinging 192.168.1.1 with 32 bytes of data:
+
+Reply from 192.168.1.1: bytes=32 time<1ms TTL=255
+```
+
+### Часть 3. Конфигурирование и проверка DHCP Relay на маршрутизаторе R2
+
+#### Настройка маршрутизатора R2 как DHCP relay для LAN на интерфейсе G0/0/1
+
+Настройка адреса IP-helper на интерфейсе G0/0/1 с указанием адреса интерфейса R1 G0/0/0
+
+```
+interface G0/0/0
+ip helper-address 10.0.0.1
+```
+Копирование текущей конфигурации в файл стартовой конфигурации<br>
+`copy running-config startup-config`
+
+Проверка получения IP-адреса на интерфейсе компьютера PC-B. Проверка соединения с интерфейсом R1 G0/0/1
+```
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: ccna-lab.com
+   Physical Address................: 0001.C956.A00C
+   Link-local IPv6 Address.........: FE80::201:C9FF:FE56:A00C
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.103
+   Subnet Mask.....................: 255.255.255.240
+   Default Gateway.................: ::
+                                     192.168.1.97
+   DHCP Servers....................: 10.0.0.1
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-60-BD-57-67-00-01-C9-56-A0-0C
+   DNS Servers.....................: ::
+                                     0.0.0.0
+```
+```
+Pinging 192.168.1.97 with 32 bytes of data:
+
+Reply from 192.168.1.97: bytes=32 time<1ms TTL=255
+```
+
+Проверка выданных IP-адресов на маршрутизаторе R1
+```
+R1#show ip dhcp binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+192.168.1.6      00E0.A382.D9D8           --                     Automatic
+192.168.1.103    0001.C956.A00C           --                     Automatic
+```
+*команда ip dhcp server statistics недоступна в Packet Tracer* 
