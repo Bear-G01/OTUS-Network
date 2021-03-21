@@ -278,7 +278,23 @@ switchport mode trunk
 Копирование текущей конфигурации в файл стартовой конфигурации<br>
 `copy running-config startup-config`
 
-Возможные адреса DHCP, если бы он был включен
+Проверка статуса trunk
+```
+S1#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/5       on           802.1q         trunking      1000
+
+Port        Vlans allowed on trunk
+Fa0/5       100,200,1000
+
+Port        Vlans allowed and active in management domain
+Fa0/5       100,200
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/5       100,200
+```
+
+Возможные адреса DHCP, если бы он был включен:
 
 со стороны PC-A: 192.168.1.3-192.168.1.62
 со стороны PC-B: 192.168.1.98-192.168.1.110
