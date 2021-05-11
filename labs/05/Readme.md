@@ -299,7 +299,7 @@ FastEthernet0 Connection:(default port)
 
 **Настройка маршрутизатора R2 как агента DHCPv6 Relay на интерфейсе G0/0/1**
 
-Конфигурирование DHCPv6 Relay и добавление флага managed-confog-flag (для настройки Stateful DHCPv6)
+Конфигурирование DHCPv6 Relay и добавление флага managed-config-flag (для настройки Stateful DHCPv6)
 
 ```
 interface g0/0/1
