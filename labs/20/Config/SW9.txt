@@ -1,0 +1,169 @@
+Current configuration : 2699 bytes
+!
+! Last configuration change at 16:04:08 EET Fri Jun 25 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW9
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk allowed vlan 110,115,120,125,170,175
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/0
+ switchport trunk allowed vlan 110,115,120,125,170,175
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface Ethernet0/1
+ switchport trunk allowed vlan 110,115,120,125,170,175
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface Ethernet0/2
+ switchport access vlan 110
+ switchport mode access
+!
+interface Ethernet0/3
+ no switchport
+ ip address 172.17.32.10 255.255.255.252
+ duplex auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:1:17:3::9/64
+!
+interface Ethernet1/0
+ no switchport
+ ip address 172.17.32.18 255.255.255.252
+ duplex auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:1:17:5::9/64
+!
+interface Ethernet1/1
+ switchport access vlan 777
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/2
+ switchport access vlan 777
+ switchport mode access
+ shutdown
+!
+interface Ethernet1/3
+ switchport access vlan 777
+ switchport mode access
+ shutdown
+!
+interface Vlan110
+ ip address 172.17.0.1 255.255.254.0
+!
+!
+router eigrp EI-PETER
+ !
+ address-family ipv4 unicast autonomous-system 10
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet1/0
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 172.17.0.0 0.0.0.255
+  network 172.17.32.8 0.0.0.3
+  network 172.17.32.16 0.0.0.3
+  eigrp router-id 0.0.0.9
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 10
+  !
+  af-interface default
+   shutdown
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   no shutdown
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet1/0
+   no shutdown
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

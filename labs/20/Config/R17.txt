@@ -1,0 +1,175 @@
+Current configuration : 2405 bytes
+!
+! Last configuration change at 10:51:46 EET Sat Jun 26 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R17
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ ip address 172.17.32.9 255.255.255.252
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:1:17:3::17/64
+ ipv6 enable
+!
+interface Ethernet0/1
+ ip address 172.17.32.2 255.255.255.252
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:1:17:1::17/64
+ ipv6 enable
+!
+interface Ethernet0/2
+ ip address 172.17.32.13 255.255.255.252
+ ipv6 address FE80::17 link-local
+ ipv6 address 2001:1:17:4::17/64
+ ipv6 enable
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+!
+router eigrp EI-PETER
+ !
+ address-family ipv4 unicast autonomous-system 10
+  !
+  af-interface default
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   summary-address 172.17.32.0 255.255.255.224
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   summary-address 172.17.32.0 255.255.255.224
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   summary-address 172.17.32.0 255.255.255.224
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 172.17.32.0 0.0.0.3
+  network 172.17.32.8 0.0.0.3
+  network 172.17.32.12 0.0.0.3
+  eigrp router-id 0.0.0.17
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 10
+  !
+  af-interface default
+   shutdown
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/1
+   no shutdown
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/0
+   no shutdown
+   no passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/2
+   no shutdown
+   no passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 0.0.0.17
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end

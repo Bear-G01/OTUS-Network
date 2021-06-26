@@ -14,7 +14,7 @@
 
 #### Топология
 
-![topology14](topology14.jpg)
+![topology11](topology11.jpg)
 
 
 
@@ -287,6 +287,51 @@ Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
 10.0.0.5          1   FULL/DR         00:00:35    14              Ethernet0/1
 ```
 
+Укажем, что маршрутизаторам R14 и R15 известен маршрут по-умолчанию
+
+```
+(config)#ipv6 router ospf 1
+(config-rtr)#default-information originate
+```
+
+Таблица маршрутизации на маршрутизаторе R12
+
+```
+OE2 ::/0 [110/1], tag 1
+     via FE80::14, Ethernet0/2
+     via FE80::15, Ethernet0/3
+O   2001:1:16:1::/64 [110/20]
+     via FE80::14, Ethernet0/2
+C   2001:1:16:2::/64 [0/0]
+     via Ethernet0/2, directly connected
+L   2001:1:16:2::12/128 [0/0]
+     via Ethernet0/2, receive
+C   2001:1:16:3::/64 [0/0]
+     via Ethernet0/3, directly connected
+L   2001:1:16:3::12/128 [0/0]
+     via Ethernet0/3, receive
+O   2001:1:16:4::/64 [110/20]
+     via FE80::15, Ethernet0/3
+OI  2001:1:16:5::/64 [110/20]
+     via FE80::14, Ethernet0/2
+OI  2001:1:16:6::/64 [110/20]
+     via FE80::15, Ethernet0/3
+C   2001:1:16:7::/64 [0/0]
+     via Ethernet0/0, directly connected
+L   2001:1:16:7::12/128 [0/0]
+     via Ethernet0/0, receive
+C   2001:1:16:8::/64 [0/0]
+     via Ethernet0/1, directly connected
+L   2001:1:16:8::12/128 [0/0]
+     via Ethernet0/1, receive
+O   2001:1:16:9::/64 [110/20]
+     via FE80::A8BB:CCFF:FE00:4001, Ethernet0/0
+O   2001:1:16:10::/64 [110/20]
+     via FE80::A8BB:CCFF:FE00:5011, Ethernet0/1
+L   FF00::/8 [0/0]
+     via Null0, receive
+```
+
 Area 101 настроена как totally-stub. Таблица маршрутизации на R19
 
 ```
@@ -300,24 +345,40 @@ L   FF00::/8 [0/0]
      via Null0, receive
 ```
 
-
-
-#### Проблемы настройки OSPFv3 в Eve-NG
-
-Отсутствует команда default-information originate в настройке процесса OSPFv3
+##### Настроим фильтрацию подсети 172.16.32.16/30 из area 101 в area 102 для IPv6 на маршрутизаторе R15
 
 ```
-R14(config-router)#default-information?
-% Unrecognized command
+(config)#ipv6 prefix-list EX-AREA101-V6 seq 5 deny 2001:1:16:5::/64
+(config)#ipv6 prefix-list EX-AREA101-V6 seq 10 permit ::/0 le 128
+....
+(config-rtr)#area 102 filter-list prefix EX-AREA101 in
 ```
 
-При фильтрации префикс-листов невозможно добавить filter-list в процесс OSPFv3
+Таблица маршрутизации на маршрутизаторе R20. Префикс 2001:1:16:5::/64 исключён.
 
 ```
-R15(config-router)#area 102 ?
-  authentication  Enable authentication
-  default-cost    Set the summary default-cost of a NSSA/stub area
-  encryption      Enable encryption
-  nssa            Specify a NSSA area
-  stub            Specify a stub area
+OE2 ::/0 [110/1], tag 1
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:1::/64 [110/30]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:2::/64 [110/30]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:3::/64 [110/20]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:4::/64 [110/20]
+     via FE80::15, Ethernet0/0
+C   2001:1:16:6::/64 [0/0]
+     via Ethernet0/0, directly connected
+L   2001:1:16:6::20/128 [0/0]
+     via Ethernet0/0, receive
+OI  2001:1:16:7::/64 [110/30]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:8::/64 [110/30]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:9::/64 [110/30]
+     via FE80::15, Ethernet0/0
+OI  2001:1:16:10::/64 [110/30]
+     via FE80::15, Ethernet0/0
+L   FF00::/8 [0/0]
 ```
+

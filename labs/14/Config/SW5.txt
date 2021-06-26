@@ -1,0 +1,138 @@
+Current configuration : 2062 bytes
+!
+! Last configuration change at 09:25:58 EET Fri Jun 25 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+!
+!
+!
+no ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 172.16.255.5 255.255.255.255
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+!
+interface Ethernet0/0
+ switchport trunk allowed vlan 10,15,20,25,70,75
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport trunk allowed vlan 10,15,20,25,70,75
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ channel-group 1 mode desirable
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ channel-group 1 mode desirable
+!
+interface Ethernet1/0
+ no switchport
+ ip address 172.16.32.38 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 enable
+ ipv6 ospf 1 area 10
+!
+interface Ethernet1/1
+ no switchport
+ ip address 172.16.32.30 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 enable
+ ipv6 ospf 1 area 10
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Vlan10
+ ip address 172.16.0.5 255.255.254.0
+ ip ospf 1 area 10
+ vrrp 10 ip 172.16.0.1
+!
+interface Vlan20
+ ip address 172.16.8.5 255.255.254.0
+ ip ospf 1 area 10
+ vrrp 20 ip 172.16.8.1
+ vrrp 20 priority 150
+!
+router ospfv3 1
+ router-id 10.0.0.5
+ !
+ address-family ipv6 unicast
+ exit-address-family
+!
+router ospf 1
+ router-id 10.0.0.105
+ passive-interface default
+ no passive-interface Ethernet1/0
+ no passive-interface Ethernet1/1
+ no passive-interface Port-channel1
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end
