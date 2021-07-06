@@ -22,7 +22,7 @@
 
 Для эмуляции транзитного трафика с маршрутизаторов R22 и R21 отключим внешние линки
 
-![](L:\OTUS\3.25.BGP-Filter\lab25-1.svg)
+![](lab25-1.svg)
 
 
 
@@ -109,7 +109,7 @@ RPKI validation codes: V valid, I invalid, N Not found
 
 
 
-![](L:\OTUS\3.25.BGP-Filter\lab25-2.svg)
+![](lab25-2.svg)
 
 
 
