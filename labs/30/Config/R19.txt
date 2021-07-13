@@ -1,0 +1,136 @@
+Current configuration : 1576 bytes
+!
+! Last configuration change at 00:53:39 EET Mon Jul 12 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R19
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!         
+!         
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip domain name ciscolab.com
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!         
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$PNF0$yDrr5Qy2Cif0zL5M2wKgi1
+!
+redundancy
+!
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!         
+interface Loopback0
+ ip address 172.16.255.19 255.255.255.255
+ ip ospf 1 area 101
+!
+interface Ethernet0/0
+ ip address 172.16.32.18 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 101
+ ipv6 address FE80::19 link-local
+ ipv6 address 2001:1:16:5::19/64
+ ipv6 enable
+ ipv6 ospf 1 area 101
+ ipv6 ospf network point-to-point
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+router ospfv3 1
+ area 101 stub
+ !
+ address-family ipv6 unicast
+ exit-address-family
+!
+router ospf 1
+ router-id 101.0.0.19
+ area 101 stub
+ passive-interface default
+ no passive-interface Ethernet0/0
+ no passive-interface Loopback0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!         
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+end
