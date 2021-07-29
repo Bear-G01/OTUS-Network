@@ -1,0 +1,176 @@
+Current configuration : 2688 bytes
+!
+! Last configuration change at 15:46:02 EET Thu Jul 29 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R14
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip vrf FVRF
+ rd 1:1
+!
+ip dhcp excluded-address 10.185.0.1 10.185.0.9
+!
+ip dhcp pool WAREHOUSE
+ network 10.185.0.0 255.255.255.0
+ domain-name OTUS-PROJECT.RU
+ default-router 10.185.0.1
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+crypto keyring VRF_PSK vrf FVRF
+  pre-shared-key address 0.0.0.0 0.0.0.0 key OTUS-KEY
+!
+!
+!
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 5
+!
+!
+crypto ipsec transform-set AES-256 esp-aes 256 esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN1
+ set transform-set AES-256
+!
+!
+!
+!
+!
+!
+!
+interface Tunnel100
+ ip address 10.64.0.4 255.255.255.0
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map multicast 89.208.35.213
+ ip nhrp map 10.64.0.1 89.208.35.213
+ ip nhrp network-id 100
+ ip nhrp holdtime 600
+ ip nhrp nhs 10.64.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/1
+ tunnel destination 89.208.35.213
+ tunnel key 101
+ tunnel vrf FVRF
+ tunnel protection ipsec profile DMVPN1 shared
+!
+interface Tunnel200
+ ip address 10.65.0.4 255.255.255.0
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map multicast 89.208.35.213
+ ip nhrp map 10.65.0.1 89.208.35.213
+ ip nhrp network-id 200
+ ip nhrp holdtime 600
+ ip nhrp nhs 10.65.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/1
+ tunnel destination 89.208.35.213
+ tunnel key 102
+ tunnel vrf FVRF
+ tunnel protection ipsec profile DMVPN1 shared
+!
+interface Ethernet0/0
+ ip address 10.185.0.1 255.255.255.0
+!
+interface Ethernet0/1
+ ip vrf forwarding FVRF
+ ip address 89.249.249.147 255.255.255.224
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+router bgp 65100
+ bgp router-id 14.14.14.14
+ bgp log-neighbor-changes
+ network 10.185.0.0 mask 255.255.0.0
+ redistribute connected
+ redistribute static
+ neighbor 10.64.0.1 remote-as 65100
+ neighbor 10.65.0.1 remote-as 65100
+ !
+ address-family ipv4 vrf FVRF
+  neighbor 89.249.249.129 remote-as 31370
+  neighbor 89.249.249.129 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route vrf FVRF 0.0.0.0 0.0.0.0 89.249.249.129 name INET
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
