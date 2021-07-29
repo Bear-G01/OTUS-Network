@@ -6,7 +6,7 @@
 
 
 
-![](/Users/leonov/Documents/OTUS/PROJECT/project.svg)
+![](project.svg)
 
 
 
