@@ -359,6 +359,12 @@ trace to 192.168.15.11, 8 hops max, press Ctrl+C to stop
 
 #### Реализация схемы  Dual Hub, Dual Cloud
 
+![](../../../OTUS/PROJECT/dualcloud-1.png)
+
+
+
+
+
 Для реализации схемы  Dual Hub, Dual Cloud  добавим в облако 2 маршрутизатора:
 
 ![](project-dualcloud-2.svg)
@@ -434,5 +440,47 @@ interface Tunnel200
 ```
  ip nhrp map multicast 89.208.32.1
  ip nhrp map 10.64.0.1 89.208.32.1
+```
+
+Настроить eBGP и iBGP
+
+R44:
+
+```
+router bgp 65100
+ bgp router-id 44.44.44.44
+ bgp log-neighbor-changes
+ bgp listen range 10.65.0.0/16 peer-group DMVPN-SPOKES
+ network 192.168.32.4
+ redistribute connected
+ redistribute static
+ neighbor DMVPN-SPOKES peer-group
+ neighbor DMVPN-SPOKES remote-as 65100
+ neighbor DMVPN-SPOKES update-source Tunnel200
+ neighbor DMVPN-SPOKES route-reflector-client
+ !
+ address-family ipv4 vrf FVRF
+  neighbor 89.208.32.1 remote-as 12695
+  neighbor 89.208.32.1 activate
+```
+
+R16:
+
+```
+router bgp 65100
+ bgp router-id 16.16.16.16
+ bgp log-neighbor-changes
+ bgp listen range 10.64.0.0/16 peer-group DMVPN-SPOKES
+ network 192.168.32.0
+ redistribute connected
+ redistribute static
+ neighbor DMVPN-SPOKES peer-group
+ neighbor DMVPN-SPOKES remote-as 65100
+ neighbor DMVPN-SPOKES update-source Tunnel100
+ neighbor DMVPN-SPOKES route-reflector-client
+ !
+ address-family ipv4 vrf FVRF
+  neighbor 89.208.35.1 remote-as 12695
+  neighbor 89.208.35.1 activate
 ```
 
