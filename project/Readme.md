@@ -359,6 +359,8 @@ trace to 192.168.15.11, 8 hops max, press Ctrl+C to stop
 
 #### Реализация схемы  Dual Hub, Dual Cloud
 
+![](dualcloud-1.png)
+
 Для реализации схемы  Dual Hub, Dual Cloud  добавим в облако 2 маршрутизатора:
 
 ![](project-dualcloud-2.svg)
