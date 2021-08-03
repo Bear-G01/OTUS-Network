@@ -1,0 +1,102 @@
+! SW29-config
+
+Current configuration : 1253 bytes
+!
+! Last configuration change at 21:21:32 EET Tue Aug 3 2021
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname SW29
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport access vlan 310
+ switchport mode access
+!
+interface Ethernet0/1
+ switchport access vlan 320
+ switchport mode access
+!
+interface Ethernet0/2
+ no switchport
+ ip address 172.18.32.2 255.255.255.252
+ ip ospf 1 area 18
+ duplex auto
+!
+interface Ethernet0/3
+!
+interface Vlan310
+ ip address 172.18.0.1 255.255.255.0
+ ip ospf 1 area 18
+!
+interface Vlan320
+ ip address 172.18.8.1 255.255.255.0
+ ip ospf 1 area 18
+!
+router ospf 1
+ passive-interface default
+ no passive-interface Ethernet0/2
+ no passive-interface Vlan310
+ no passive-interface Vlan320
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip route 0.0.0.0 0.0.0.0 172.18.32.1
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end
