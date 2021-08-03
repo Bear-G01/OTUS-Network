@@ -14,7 +14,7 @@
 
 ##### Топология туннелей:
 
-![](/Users/leonov/Documents/OTUS/33-DMVPN/lab33.svg)
+![](lab33.svg)
 
 Настройка GRE туннеля и маршрутизации OSPF внутри туннеля
 
