@@ -174,61 +174,61 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 
 Gateway of last resort is 172.16.32.6 to network 0.0.0.0
 
-O*E2  0.0.0.0/0 [110/1] via 172.16.32.6, 06:06:57, Ethernet0/0
-                [110/1] via 172.16.32.2, 06:06:57, Ethernet0/1
+O*E2  0.0.0.0/0 [110/1] via 172.16.32.6, 10:03:12, Ethernet0/0
+                [110/1] via 172.16.32.2, 10:03:12, Ethernet0/1
       10.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
 C        10.65.0.0/24 is directly connected, Tunnel200
 L        10.65.0.1/32 is directly connected, Tunnel200
-O IA     10.255.0.0/24 [110/1020] via 172.16.32.6, 06:16:45, Ethernet0/0
-                       [110/1020] via 172.16.32.2, 06:16:45, Ethernet0/1
+O IA     10.255.0.0/24 [110/1020] via 172.16.32.6, 10:13:00, Ethernet0/0
+                       [110/1020] via 172.16.32.2, 10:13:00, Ethernet0/1
       12.0.0.0/32 is subnetted, 1 subnets
-O        12.12.12.12 [110/11] via 172.16.32.6, 08:44:06, Ethernet0/0
+O        12.12.12.12 [110/11] via 172.16.32.6, 12:40:21, Ethernet0/0
       13.0.0.0/32 is subnetted, 1 subnets
-O        13.13.13.13 [110/11] via 172.16.32.2, 08:44:06, Ethernet0/1
+O        13.13.13.13 [110/11] via 172.16.32.2, 12:40:21, Ethernet0/1
       14.0.0.0/32 is subnetted, 1 subnets
 C        14.14.14.14 is directly connected, Loopback0
       15.0.0.0/32 is subnetted, 1 subnets
-O        15.15.15.15 [110/21] via 172.16.32.6, 06:30:08, Ethernet0/0
-                     [110/21] via 172.16.32.2, 06:30:08, Ethernet0/1
+O        15.15.15.15 [110/21] via 172.16.32.6, 10:26:23, Ethernet0/0
+                     [110/21] via 172.16.32.2, 10:26:23, Ethernet0/1
       172.16.0.0/16 is variably subnetted, 17 subnets, 3 masks
-O IA     172.16.0.0/23 [110/21] via 172.16.32.6, 08:44:06, Ethernet0/0
-                       [110/21] via 172.16.32.2, 08:44:06, Ethernet0/1
-O IA     172.16.8.0/23 [110/21] via 172.16.32.6, 08:44:06, Ethernet0/0
-                       [110/21] via 172.16.32.2, 08:44:06, Ethernet0/1
+O IA     172.16.0.0/23 [110/21] via 172.16.32.6, 12:40:21, Ethernet0/0
+                       [110/21] via 172.16.32.2, 12:40:21, Ethernet0/1
+O IA     172.16.8.0/23 [110/21] via 172.16.32.6, 12:40:21, Ethernet0/0
+                       [110/21] via 172.16.32.2, 12:40:21, Ethernet0/1
 C        172.16.32.0/30 is directly connected, Ethernet0/1
 L        172.16.32.1/32 is directly connected, Ethernet0/1
 C        172.16.32.4/30 is directly connected, Ethernet0/0
 L        172.16.32.5/32 is directly connected, Ethernet0/0
-O        172.16.32.8/30 [110/20] via 172.16.32.6, 08:44:06, Ethernet0/0
-O        172.16.32.12/30 [110/20] via 172.16.32.2, 08:44:06, Ethernet0/1
+O        172.16.32.8/30 [110/20] via 172.16.32.6, 12:40:21, Ethernet0/0
+O        172.16.32.12/30 [110/20] via 172.16.32.2, 12:40:21, Ethernet0/1
 C        172.16.32.16/30 is directly connected, Ethernet0/3
 L        172.16.32.17/32 is directly connected, Ethernet0/3
-O IA     172.16.32.20/30 [110/30] via 172.16.32.6, 06:30:03, Ethernet0/0
-                         [110/30] via 172.16.32.2, 06:30:03, Ethernet0/1
-O IA     172.16.32.24/30 [110/20] via 172.16.32.6, 08:44:06, Ethernet0/0
-O IA     172.16.32.28/30 [110/20] via 172.16.32.6, 08:44:06, Ethernet0/0
-O IA     172.16.32.32/30 [110/20] via 172.16.32.2, 08:44:06, Ethernet0/1
-O IA     172.16.32.36/30 [110/20] via 172.16.32.2, 08:44:06, Ethernet0/1
-O E2     172.16.255.4/32 [110/20] via 172.16.32.6, 08:44:06, Ethernet0/0
-                         [110/20] via 172.16.32.2, 08:44:06, Ethernet0/1
-O        172.16.255.19/32 [110/11] via 172.16.32.18, 08:44:06, Ethernet0/3
+O IA     172.16.32.20/30 [110/30] via 172.16.32.6, 10:26:18, Ethernet0/0
+                         [110/30] via 172.16.32.2, 10:26:18, Ethernet0/1
+O IA     172.16.32.24/30 [110/20] via 172.16.32.6, 12:40:21, Ethernet0/0
+O IA     172.16.32.28/30 [110/20] via 172.16.32.6, 12:40:21, Ethernet0/0
+O IA     172.16.32.32/30 [110/20] via 172.16.32.2, 12:40:21, Ethernet0/1
+O IA     172.16.32.36/30 [110/20] via 172.16.32.2, 12:40:21, Ethernet0/1
+O E2     172.16.255.4/32 [110/20] via 172.16.32.6, 12:40:21, Ethernet0/0
+                         [110/20] via 172.16.32.2, 12:40:21, Ethernet0/1
+O        172.16.255.19/32 [110/11] via 172.16.32.18, 12:40:21, Ethernet0/3
       172.17.0.0/16 is variably subnetted, 5 subnets, 3 masks
-O E1     172.17.0.0/23 [110/1040] via 172.16.32.6, 06:16:29, Ethernet0/0
-                       [110/1040] via 172.16.32.2, 06:16:29, Ethernet0/1
-O E1     172.17.8.0/23 [110/1040] via 172.16.32.6, 06:16:29, Ethernet0/0
-                       [110/1040] via 172.16.32.2, 06:16:29, Ethernet0/1
-O E1     172.17.32.0/27 [110/1040] via 172.16.32.6, 06:16:29, Ethernet0/0
-                        [110/1040] via 172.16.32.2, 06:16:29, Ethernet0/1
-O E1     172.17.32.0/30 [110/1040] via 172.16.32.6, 06:16:29, Ethernet0/0
-                        [110/1040] via 172.16.32.2, 06:16:29, Ethernet0/1
-O E1     172.17.32.4/30 [110/1040] via 172.16.32.6, 06:16:29, Ethernet0/0
-                        [110/1040] via 172.16.32.2, 06:16:29, Ethernet0/1
+O E1     172.17.0.0/23 [110/1040] via 172.16.32.6, 10:12:44, Ethernet0/0
+                       [110/1040] via 172.16.32.2, 10:12:44, Ethernet0/1
+O E1     172.17.8.0/23 [110/1040] via 172.16.32.6, 10:12:44, Ethernet0/0
+                       [110/1040] via 172.16.32.2, 10:12:44, Ethernet0/1
+O E1     172.17.32.0/27 [110/1040] via 172.16.32.6, 10:12:44, Ethernet0/0
+                        [110/1040] via 172.16.32.2, 10:12:44, Ethernet0/1
+O E1     172.17.32.0/30 [110/1040] via 172.16.32.6, 10:12:44, Ethernet0/0
+                        [110/1040] via 172.16.32.2, 10:12:44, Ethernet0/1
+O E1     172.17.32.4/30 [110/1040] via 172.16.32.6, 10:12:44, Ethernet0/0
+                        [110/1040] via 172.16.32.2, 10:12:44, Ethernet0/1
       172.18.0.0/16 is variably subnetted, 3 subnets, 2 masks
-O        172.18.0.0/24 [110/1011] via 10.65.0.3, 03:17:32, Tunnel200
-O E2     172.18.8.0/24 [110/20] via 10.65.0.3, 03:17:38, Tunnel200
-O        172.18.32.0/30 [110/1010] via 10.65.0.3, 03:18:00, Tunnel200
+O IA     172.18.0.0/24 [110/1011] via 10.65.0.3, 00:00:07, Tunnel200
+O IA     172.18.8.0/24 [110/1011] via 10.65.0.3, 00:00:07, Tunnel200
+O IA     172.18.32.0/30 [110/1010] via 10.65.0.3, 00:01:37, Tunnel200
       172.19.0.0/24 is subnetted, 1 subnets
-O        172.19.0.0 [110/1010] via 10.65.0.2, 05:35:08, Tunnel200
+O        172.19.0.0 [110/1010] via 10.65.0.2, 09:31:23, Tunnel200
       188.0.0.0/16 is variably subnetted, 2 subnets, 2 masks
 C        188.0.1.0/30 is directly connected, Ethernet0/2
 L        188.0.1.2/32 is directly connected, Ethernet0/2
@@ -282,18 +282,19 @@ trace to 172.17.0.10, 8 hops max, press Ctrl+C to stop
 Чокурдах
 
 ```
-VPCS> ping 172.18.32.2
+VPCS> ping 172.18.0.10
 
-84 bytes from 172.18.32.2 icmp_seq=1 ttl=252 time=7.656 ms
-84 bytes from 172.18.32.2 icmp_seq=2 ttl=253 time=1.568 ms
-84 bytes from 172.18.32.2 icmp_seq=3 ttl=253 time=1.689 ms
-84 bytes from 172.18.32.2 icmp_seq=4 ttl=253 time=2.140 ms
-84 bytes from 172.18.32.2 icmp_seq=5 ttl=253 time=2.433 ms
+84 bytes from 172.18.0.10 icmp_seq=1 ttl=60 time=6.796 ms
+84 bytes from 172.18.0.10 icmp_seq=2 ttl=61 time=2.064 ms
+84 bytes from 172.18.0.10 icmp_seq=3 ttl=61 time=6.120 ms
+84 bytes from 172.18.0.10 icmp_seq=4 ttl=61 time=7.219 ms
+84 bytes from 172.18.0.10 icmp_seq=5 ttl=61 time=6.046 ms
 
-VPCS> trace 172.18.32.2
-trace to 172.18.32.2, 8 hops max, press Ctrl+C to stop
- 1   172.19.0.1   0.700 ms  0.249 ms  0.301 ms
- 2   10.65.0.3   1.437 ms  1.606 ms  1.762 ms
- 3   *172.18.32.2   2.583 ms (ICMP type:3, code:3, Destination port unreachable)  *
+VPCS> trace 172.18.0.10
+trace to 172.18.0.10, 8 hops max, press Ctrl+C to stop
+ 1   172.19.0.1   0.541 ms  0.821 ms  0.651 ms
+ 2   10.65.0.3   1.584 ms  1.486 ms  1.695 ms
+ 3   172.18.32.2   1.540 ms  1.705 ms  2.214 ms
+ 4   *172.18.0.10   1.811 ms (ICMP type:3, code:3, Destination port unreachable)
 ```
 

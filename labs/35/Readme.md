@@ -184,17 +184,19 @@ trace to 172.17.0.10, 8 hops max, press Ctrl+C to stop
 Чокурдах
 
 ```
-VPCS> ping 172.18.32.2
+VPCS> ping 172.18.0.10
 
-84 bytes from 172.18.32.2 icmp_seq=1 ttl=252 time=7.656 ms
-84 bytes from 172.18.32.2 icmp_seq=2 ttl=253 time=1.568 ms
-84 bytes from 172.18.32.2 icmp_seq=3 ttl=253 time=1.689 ms
-84 bytes from 172.18.32.2 icmp_seq=4 ttl=253 time=2.140 ms
-84 bytes from 172.18.32.2 icmp_seq=5 ttl=253 time=2.433 ms
+84 bytes from 172.18.0.10 icmp_seq=1 ttl=60 time=6.796 ms
+84 bytes from 172.18.0.10 icmp_seq=2 ttl=61 time=2.064 ms
+84 bytes from 172.18.0.10 icmp_seq=3 ttl=61 time=6.120 ms
+84 bytes from 172.18.0.10 icmp_seq=4 ttl=61 time=7.219 ms
+84 bytes from 172.18.0.10 icmp_seq=5 ttl=61 time=6.046 ms
 
-VPCS> trace 172.18.32.2
-trace to 172.18.32.2, 8 hops max, press Ctrl+C to stop
- 1   172.19.0.1   0.700 ms  0.249 ms  0.301 ms
- 2   10.65.0.3   1.437 ms  1.606 ms  1.762 ms
- 3   *172.18.32.2   2.583 ms (ICMP type:3, code:3, Destination port unreachable)  *
+VPCS> trace 172.18.0.10
+trace to 172.18.0.10, 8 hops max, press Ctrl+C to stop
+ 1   172.19.0.1   0.541 ms  0.821 ms  0.651 ms
+ 2   10.65.0.3   1.584 ms  1.486 ms  1.695 ms
+ 3   172.18.32.2   1.540 ms  1.705 ms  2.214 ms
+ 4   *172.18.0.10   1.811 ms (ICMP type:3, code:3, Destination port unreachable)
 ```
+
