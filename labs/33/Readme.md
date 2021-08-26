@@ -197,6 +197,119 @@ router ospf 1
  no passive-interface Ethernet0/2
 ```
 
+Провека туннелей
+
+На R14:
+
+```
+R14#sh dmvpn
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+	N - NATed, L - Local, X - No Socket
+	# Ent --> Number of NHRP entries with same NBMA peer
+	NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+
+	UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
+
+Interface: Tunnel200, IPv4 NHRP Details
+Type:Hub, NHRP Peers:2,
+
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+
+----- --------------- --------------- ----- -------- -----
+
+     1 198.0.52.42           10.65.0.2    UP 01:28:41     D
+     1 198.0.52.34           10.65.0.3    UP 01:41:47     D
+
+R14#sh ip nhrp
+10.65.0.2/32 via 10.65.0.2
+   Tunnel200 created 01:28:53, expire 00:08:58
+   Type: dynamic, Flags: unique registered used nhop
+   NBMA address: 198.0.52.42
+10.65.0.3/32 via 10.65.0.3
+   Tunnel200 created 01:41:58, expire 00:09:52
+   Type: dynamic, Flags: unique registered used nhop
+   NBMA address: 198.0.52.34
+```
+
+На R15
+
+```
+R15#sh dmvpn
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+	N - NATed, L - Local, X - No Socket
+	# Ent --> Number of NHRP entries with same NBMA peer
+	NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+	UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
+
+Interface: Tunnel100, IPv4 NHRP Details
+Type:Hub, NHRP Peers:2,
+
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+ ----- --------------- --------------- ----- -------- -----
+     1 198.0.52.42           10.64.0.2    UP 01:31:04     D
+     1 198.0.52.34           10.64.0.3    UP 01:47:45     D
+
+R15#sh ip nhrp
+10.64.0.2/32 via 10.64.0.2
+   Tunnel100 created 01:31:09, expire 00:07:33
+   Type: dynamic, Flags: unique registered used nhop
+   NBMA address: 198.0.52.42
+10.64.0.3/32 via 10.64.0.3
+   Tunnel100 created 01:47:50, expire 00:08:50
+   Type: dynamic, Flags: unique registered used nhop
+   NBMA address: 198.0.52.34
+```
+
+ На R27
+
+```
+R27#sh dmvpn
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+	N - NATed, L - Local, X - No Socket
+	# Ent --> Number of NHRP entries with same NBMA peer
+	NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+	UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
+
+Interface: Tunnel100, IPv4 NHRP Details
+Type:Spoke, NHRP Peers:2,
+
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+ ----- --------------- --------------- ----- -------- -----
+     1 98.0.31.2             10.64.0.1    UP 01:34:56     S
+     1 198.0.52.34           10.64.0.3    UP 00:01:36     D
+
+Interface: Tunnel200, IPv4 NHRP Details
+Type:Spoke, NHRP Peers:2,
+
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+ ----- --------------- --------------- ----- -------- -----
+     1 188.0.1.2             10.65.0.1    UP 01:36:22     S
+     1 198.0.52.34           10.65.0.3    UP 00:01:36     D
+
+R27#sh ip nhrp
+10.64.0.1/32 via 10.64.0.1
+   Tunnel100 created 01:36:27, never expire
+   Type: static, Flags: used
+   NBMA address: 98.0.31.2
+10.64.0.3/32 via 10.64.0.3
+   Tunnel100 created 00:01:48, expire 00:08:11
+   Type: dynamic, Flags: router used nhop
+   NBMA address: 198.0.52.34
+10.65.0.1/32 via 10.65.0.1
+   Tunnel200 created 03:51:04, never expire
+   Type: static, Flags: used
+   NBMA address: 188.0.1.2
+10.65.0.3/32 via 10.65.0.3
+   Tunnel200 created 00:01:48, expire 00:08:11
+   Type: dynamic, Flags: router used nhop
+   NBMA address: 198.0.52.34
+```
+
+
+
 Таблица маршрутизации на R14:
 
 ```

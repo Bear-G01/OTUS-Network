@@ -1,0 +1,235 @@
+Current configuration : 4183 bytes
+!
+! Last configuration change at 21:56:41 EET Thu Aug 26 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R28
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+track 1 ip sla 1 reachability
+ delay down 10 up 5
+!
+track 2 ip sla 2 reachability
+ delay down 10 up 5
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 5
+crypto isakmp key OTUS-KEY address 0.0.0.0
+crypto isakmp keepalive 10
+!
+!
+crypto ipsec transform-set AES-256 esp-aes 256 esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN
+ set transform-set AES-256
+!
+!
+!
+!
+!
+!
+!
+interface Tunnel100
+ ip address 10.64.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map 10.64.0.1 98.0.31.2
+ ip nhrp map multicast 98.0.31.2
+ ip nhrp network-id 101
+ ip nhrp holdtime 600
+ ip nhrp nhs 10.64.0.1
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf priority 0
+ ip ospf 1 area 0
+ tunnel source Ethernet0/1
+ tunnel mode gre multipoint
+ tunnel key 101
+ tunnel protection ipsec profile DMVPN shared
+!
+interface Tunnel200
+ ip address 10.65.0.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map 10.65.0.1 188.0.1.2
+ ip nhrp map multicast 188.0.1.2
+ ip nhrp network-id 102
+ ip nhrp holdtime 600
+ ip nhrp nhs 10.65.0.1
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf priority 0
+ ip ospf 1 area 0
+ tunnel source Ethernet0/1
+ tunnel mode gre multipoint
+ tunnel key 102
+ tunnel protection ipsec profile DMVPN shared
+!
+interface Ethernet0/0
+ ip address 198.0.52.26 255.255.255.248
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+ ipv6 address 2001:1:520:1052::28/64
+ ipv6 enable
+!
+interface Ethernet0/1
+ ip address 198.0.52.34 255.255.255.248
+ ip nat outside
+ ip virtual-reassembly in
+ ipv6 address FE80::28 link-local
+ ipv6 address 2001:1:520:1051::28/64
+ ipv6 enable
+!
+interface Ethernet0/2
+ ip address 172.18.32.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip policy route-map POLICY
+ ip ospf 1 area 18
+ ipv6 address FE80::28 link-local
+ ipv6 address 2001:1:18:1::28/64
+ ipv6 enable
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 28.28.28.28
+ passive-interface default
+ no passive-interface Ethernet0/2
+ no passive-interface Tunnel100
+ no passive-interface Tunnel200
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source static 172.18.0.10 198.0.52.35
+ip nat inside source static 172.18.8.20 198.0.52.36
+ip route 0.0.0.0 0.0.0.0 198.0.52.33 5
+ip route 0.0.0.0 0.0.0.0 198.0.52.25 10
+ip route 172.18.0.0 255.255.255.0 Ethernet0/2
+ip route 172.18.8.0 255.255.255.0 Ethernet0/2
+!
+ip access-list standard ACL_VLAN310
+ permit 172.16.0.0 0.4.255.255
+ip access-list standard ACL_VLAN320
+ permit 172.16.0.0 0.4.255.255
+!
+ip sla 1
+ icmp-echo 198.0.52.33 source-ip 198.0.52.34
+ frequency 5
+ip sla schedule 1 life forever start-time now
+ip sla 2
+ icmp-echo 198.0.52.25 source-ip 198.0.52.26
+ frequency 5
+ip sla schedule 2 life forever start-time now
+ipv6 route ::/0 2001:1:520:1051::25 5
+ipv6 route ::/0 2001:1:520:1052::26 10
+!
+route-map POLICY permit 10
+ match ip address ACL_VLAN310
+ set ip next-hop verify-availability 198.0.52.33 1 track 1
+ set ip next-hop verify-availability 198.0.52.25 2 track 2
+!
+route-map POLICY permit 20
+ match ip address ACL_VLAN320
+ set ip next-hop verify-availability 198.0.52.25 1 track 2
+ set ip next-hop verify-availability 198.0.52.33 2 track 1
+!
+!
+access-list 18 permit 172.18.0.0 0.0.255.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
+end
